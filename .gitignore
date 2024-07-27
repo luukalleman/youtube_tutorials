@@ -72,6 +72,8 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
+# Ignore .DS_Store files
+.DS_Store
 # MkDocs documentation
 /site
 
