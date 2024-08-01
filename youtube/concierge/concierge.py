@@ -1,3 +1,5 @@
+# Script with agents that handle fitness and welbeing conversations.
+
 import sqlite3
 import os
 import pprint
