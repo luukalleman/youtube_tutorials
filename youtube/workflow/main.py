@@ -1,3 +1,6 @@
+# ----------------------------------------
+# Do imports
+# ----------------------------------------
 from llama_index.core.workflow import (
     Event, StartEvent, StopEvent, Workflow, step
 )
@@ -7,7 +10,6 @@ from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
 import os
 from dotenv import load_dotenv
-import pandas as pd
 import re
 from data.data import get_data
 
@@ -45,7 +47,7 @@ class CustomerServiceBot(Workflow):
         self.index = VectorStoreIndex.from_documents(documents)
         self.retriever = VectorIndexRetriever(index=self.index)
         self.query_engine = RetrieverQueryEngine(retriever=self.retriever)
-
+        
     # ----------------------------------------
     # Step: Classify Query
     # ----------------------------------------
@@ -63,7 +65,7 @@ class CustomerServiceBot(Workflow):
             return RequestOrderIDEvent()
         else:
             return QueryEvent(query=user_query, category=classification_response)
-
+        
     # ----------------------------------------
     # Step: Request Order ID
     # ----------------------------------------
@@ -71,7 +73,7 @@ class CustomerServiceBot(Workflow):
     async def request_order_id(self, ev: RequestOrderIDEvent) -> ResponseEvent:
         response = "To check the status of your order, please provide your order ID."
         return ResponseEvent(response=response)
-
+    
     # ----------------------------------------
     # Step: Lookup Order Information
     # ----------------------------------------
@@ -86,7 +88,7 @@ class CustomerServiceBot(Workflow):
         else:
             response = f"I'm sorry, I couldn't find any information for order {order_id}."
         return ResponseEvent(response=response)
-
+    
     # ----------------------------------------
     # Step: Retrieve Information
     # ----------------------------------------
@@ -94,6 +96,14 @@ class CustomerServiceBot(Workflow):
     async def retrieve_information(self, ev: QueryEvent) -> ResponseEvent:
         response = self.query_engine.query(ev.query)
         return ResponseEvent(response=str(response))
+    
+    # ----------------------------------------
+    # Step: Format Response
+    # ----------------------------------------
+    @step()
+    async def format_response(self, ev: ResponseEvent) -> StopEvent:
+        formatted_response = f"Customer Service Bot: {ev.response}"
+        return StopEvent(result=formatted_response)
 
     # ----------------------------------------
     # Step: Generate Response
@@ -104,15 +114,7 @@ class CustomerServiceBot(Workflow):
         response = await self.llm.acomplete(prompt)
         response_text = response.get('choices', [{}])[0].get('text', '').strip()
         return ResponseEvent(response=response_text)
-
-    # ----------------------------------------
-    # Step: Format Response
-    # ----------------------------------------
-    @step()
-    async def format_response(self, ev: ResponseEvent) -> StopEvent:
-        formatted_response = f"Customer Service Bot: {ev.response}"
-        return StopEvent(result=formatted_response)
-
+    
 # ----------------------------------------
 # Main Entry Point
 # ----------------------------------------

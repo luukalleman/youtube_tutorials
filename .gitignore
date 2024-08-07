@@ -95,3 +95,42 @@ yarn-error.log
 
 # VS Code
 .vscode/
+
+# Ignore system files
+.DS_Store
+.gitconfig
+
+# Ignore personal or sensitive files
+aau_token
+history.sqlite
+
+# Ignore specific files and directories
+README
+59938e1f0534d2b1f67d0cb8d5a83c49
+64b28a218cdc1c2c15314d3b495c3bb6
+
+# Node.js specific
+package.json
+tsconfig.esm.json
+parse.js
+parse.js.map
+index.js
+
+# Documentation and License
+LICENSE.md
+README.md
+
+# TypeScript definitions and maps
+exceptions.d.ts
+exceptions.js
+index.d.ts
+index.js
+models.d.ts
+models.js
+zep-client.d.ts
+zep-client.js
+exceptions.js.map
+
+# Ignore all JavaScript files
+*.js
+*.ts
